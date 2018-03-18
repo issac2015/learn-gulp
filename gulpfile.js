@@ -9,6 +9,9 @@ var minify       = require('gulp-minify');
 var cssmin       = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
 var fileinclude  = require('gulp-file-include');
+// 加入 版本号
+var rev          = require('gulp-rev');
+var revCollector = require('gulp-rev-collector');
 //当发生异常时提示错误
 // plumber -- gulp watch 例外错误
 var plumber      = require('gulp-plumber');
@@ -16,6 +19,9 @@ var notify       = require('gulp-notify');
 var sass         = require('gulp-sass');
 var less         = require('gulp-less');
 var zip          = require('gulp-zip');
+var clean        = require('gulp-clean');
+// 同步执行任务 -- gulp 的任务的执行是异步的。 
+var runSequence  = require('run-sequence');
 
 gulp.task('serve', function() {
     // BrowserSync 监听 dist 目录
@@ -100,14 +106,65 @@ gulp.task('html', function() {
         .pipe(browserSync.stream());
 });
 
+// CSS生成文件hash编码 并 生成 rev-manifest.json文件名对照映射
+gulp.task('revCss', function() {
+
+    return gulp.src("dist/styles/**/*.css")
+        // .pipe(plumber())
+        .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
+        .pipe(rev()) // 设置 hash 值
+        .pipe(gulp.dest('dist/styles'))
+        .pipe(rev.manifest()) // 生产 hash 值得 json 文件
+        .pipe(gulp.dest('dist/rev/css')); // 保存 hash 值得 json 文件
+});
+
+//Html替换css、js文件版本
+gulp.task('revHtml', function () {
+    return gulp.src(["dist/rev/**/*.json", "dist/*.html"])
+        .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
+        .pipe(revCollector({ // Html -- 替换 css、js文件版本
+            replaceReved: true
+        }))
+        .pipe(gulp.dest("dist/"));
+});
+
+// 清空目标文件
+gulp.task('clean', function () {
+    console.log('clean');
+    return gulp.src(['dist'], {read: false})
+        .pipe(clean());
+});
+
 // publish -- 打包发布目标文件
-gulp.task('publish', function(){
+gulp.task('publish', function() {
+    // dist css 和 js hash
+
     return gulp.src('dist/**/*')
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
         .pipe(zip('publish.zip'))
         .pipe(gulp.dest('release'))
 });
 
+// build 构建
+gulp.task('build', function (done) {
+    condition = false;
+    runSequence(
+        ['revCss'],
+        ['revHtml'],
+        ['publish'],
+        done);
+});
+
+// 开发 dev 构建
+gulp.task('dev', function (done) {
+    condition = false;
+    runSequence(
+        ['clean'],
+        ['html', 'js', 'sass', 'less'],
+        ['serve'],
+        done);
+});
+
 // 编辑默认任务
-gulp.task('default', ['html', 'js', 'sass', 'less','serve']);
+gulp.task('default', ['dev']);
 
