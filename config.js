@@ -37,8 +37,12 @@ module.exports = {
         ignore: ["!"+src+"/publicHTML/*.html"]
 	},
 	img: {
-		src: src + 'img/*.{png,jpg,gif,ico}',
-		dest: dest + "/img",
+		src: src + '/img/*.{png,jpg,gif,ico}',
+		dest: dest + "/img"
+	},
+	copy: {
+		src: src + '/static/*',
+		dest: dest + "/static"
 	},
 	rev: {
 

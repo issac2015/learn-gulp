@@ -17,6 +17,7 @@ var plumber      = require('gulp-plumber');
 var notify       = require('gulp-notify');
 var sass         = require('gulp-sass');
 var less         = require('gulp-less');
+var imagemin     = require('gulp-imagemin');
 var zip          = require('gulp-zip');
 var clean        = require('gulp-clean');
 // 同步执行任务 -- gulp 的任务的执行是异步的。 
@@ -41,6 +42,8 @@ gulp.task('serve', function() {
     gulp.watch(config.less.all, ['less']);
     gulp.watch(config.js.src, ['js']);
     gulp.watch(config.html.src, ['html']);
+    gulp.watch(config.img.src, ['optimizeImg']);
+    gulp.watch(config.copy.src, ['copy']);
     // browserSync.reload -- 浏览器重载
     gulp.watch(config.html.dest).on("change", browserSync.reload);
 });
@@ -118,6 +121,20 @@ gulp.task('html', function() {
         .pipe(browserSync.stream());
 });
 
+gulp.task('optimizeImg', function () {
+    return gulp.src(config.img.src)
+        .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
+        .pipe(imagemin())
+        .pipe(gulp.dest(config.img.dest));
+        // .pipe(browserSync.stream());
+});
+
+gulp.task('copy', function () {
+    return gulp.src(config.copy.src)
+        .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
+        .pipe(gulp.dest(config.copy.dest));
+});
+
 // CSS生成文件hash编码 并 生成 rev-manifest.json文件名对照映射
 gulp.task('revCss', function() {
     return gulp.src(config.dest+"/css/**/*.css")
@@ -150,7 +167,6 @@ gulp.task('revHtml', function () {
 
 // 清空目标文件
 gulp.task('clean', function () {
-    console.log('clean');
     return gulp.src([config.dest], {read: false})
         .pipe(clean());
 });
@@ -181,8 +197,8 @@ gulp.task('dev', function (done) {
     condition = false;
     runSequence(
         ['clean'],
-        ['html', 'js', 'sass', 'less'],
-        // ['serve'],
+        ['optimizeImg', 'copy', 'html', 'js', 'sass', 'less'],
+        ['serve'],
         done);
 });
 
