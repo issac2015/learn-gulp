@@ -61,6 +61,9 @@ gulp.task('sass', function() {
             //-webkit-transform: rotate(45deg);
             //        transform: rotate(45deg);
         }))
+        .pipe(cssmin())
+        // 兼容 IE7 及 以下需设置 compatibility 属性
+        // .pipe(cssmin({compatibility: 'ie7'}))
         .pipe(gulp.dest("dist/styles"))
         .pipe(browserSync.stream());
 });
