@@ -137,22 +137,22 @@ gulp.task('copy', function () {
 
 // CSS生成文件hash编码 并 生成 rev-manifest.json文件名对照映射
 gulp.task('revCss', function() {
-    return gulp.src(config.dest+"/css/**/*.css")
+    return gulp.src(config.rev.revCss.src)
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
         .pipe(rev()) // 设置 hash 值
-        .pipe(gulp.dest(config.dest+"/css"))
+        .pipe(gulp.dest(config.rev.revCss.dest))
         .pipe(rev.manifest()) // 生产 hash 值得 json 文件
-        .pipe(gulp.dest(config.dest+'/rev/css')); // 保存 hash 值得 json 文件
+        .pipe(gulp.dest(config.rev.revCss.revDest)); // 保存 hash 值得 json 文件
 });
 
 // js生成文件hash编码 并 生成 rev-manifest.json文件名对照映射
 gulp.task('revJs', function() {
-    return gulp.src(config.dest+"/js/**/*.js")
+    return gulp.src(config.rev.revJs.src)
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
         .pipe(rev()) // 设置 hash 值
-        .pipe(gulp.dest(config.dest+"/js"))
+        .pipe(gulp.dest(config.rev.revJs.dest))
         .pipe(rev.manifest())
-        .pipe(gulp.dest(config.dest+'/rev/js'));
+        .pipe(gulp.dest(config.rev.revJs.revDest));
 });
 
 //Html替换css、js文件版本

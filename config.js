@@ -1,8 +1,6 @@
 // var src = './src';
 var src = 'app';
 var dest = 'dist';
-// 请勿 修改 rev -- 没有写
-// less 和 sass 都在 dest + "/css" -- 没有写
 
 module.exports = {
 	version: '1.0.0',
@@ -12,7 +10,6 @@ module.exports = {
 		all: src + "/less/**/*.less", // 所有 less
         src: src + "/less/*.less", // 需要编译的 less
         dest: dest + "/css", // 输出目录
-        rev: dest + "/rev/css",
         settings: { // 编译 less 过程需要的配置，可以为空
 
         }
@@ -21,15 +18,13 @@ module.exports = {
 		all: src + "/scss/**/*.scss", // 所有scss
         src: src + "/scss/*.scss", // 需要编译的scss
         dest: dest + "/css", // 输出目录
-        rev: dest + "/rev/css",
         settings: { // 编译 scss 过程需要的配置，可以为空
 
         }
 	},
 	js: {
 		src: src + "/js/**/*.js",
-        dest: dest + "/js",
-        rev: dest + "/rev/js"
+        dest: dest + "/js"
 	},
 	html: {
 		src: src + "/**/*.html",
@@ -45,6 +40,15 @@ module.exports = {
 		dest: dest + "/static"
 	},
 	rev: {
-
+		revCss: {
+			src: dest + "/css/**/*.css",
+			dest: dest + "/css",
+			revDest: dest + "/rev/css"
+		},
+		revJs: {
+			src: dest + "/js/**/*.js",
+			dest: dest + "/js",
+			revDest: dest + "/rev/js"
+		}
 	}
 };
