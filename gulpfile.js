@@ -3,9 +3,6 @@ var gulp         = require('gulp');
 var browserSync  = require('browser-sync').create(); // 创建Browsersync实例
 var SSI          = require('browsersync-ssi');
 var concat       = require('gulp-concat');
-// minify是最小化，uglify是丑化
-// 最小化，把你代码压成一行; 丑化，把你代码压成一行，并混淆丑化
-// var minify       = require('gulp-minify'); -- 弃用 uglify 有同样功能
 var uglify       = require('gulp-uglify');
 var cssmin       = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
@@ -93,13 +90,6 @@ gulp.task('less', function() {
 gulp.task('js', function(){
     return gulp.src(config.js.src)
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
-        // .pipe(minify({ // 弃用
-        //     ext: {
-        //         // source: '-min.js',
-        //         // min: '-min.js'
-        //     },
-        //     ignoreFiles: ['-min.js']
-        // }))
         .pipe(uglify({
             mangle: false
             // mangle: true,// 类型：Boolean 默认：true 是否修改变量名  
