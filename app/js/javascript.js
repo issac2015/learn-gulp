@@ -1,3 +1,8 @@
+let tt = 10;
+const ss = 20;
+console.log(tt);
+console.log(ss);
+
 /**
  * @file culture.js 公司文化
  * @author 

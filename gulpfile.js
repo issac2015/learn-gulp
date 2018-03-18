@@ -6,6 +6,7 @@ var concat       = require('gulp-concat');
 var uglify       = require('gulp-uglify');
 var cssmin       = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
+var babel        = require('gulp-babel');
 var fileinclude  = require('gulp-file-include');
 // 加入 版本号
 var rev          = require('gulp-rev');
@@ -90,6 +91,9 @@ gulp.task('less', function() {
 gulp.task('js', function() {
     return gulp.src(config.js.src)
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
+        .pipe(babel({ // 将 let 和 const 转为了 var
+            presets: ['@babel/env']
+        }))
         .pipe(uglify({
             mangle: false
             // mangle: true,// 类型：Boolean 默认：true 是否修改变量名  

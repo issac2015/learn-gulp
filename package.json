@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.42",
+    "@babel/preset-env": "^7.0.0-beta.42",
     "browser-sync": "2.10.0",
     "browsersync-ssi": "0.2.4",
     "gulp": "~3.9.0",
     "gulp-autoprefixer": "~5.0.0",
+    "gulp-babel": "^8.0.0-beta.2",
     "gulp-clean": "~0.4.0",
     "gulp-concat": "~2.6.0",
     "gulp-file-include": "~2.0.1",
