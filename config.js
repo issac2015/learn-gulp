@@ -5,6 +5,7 @@ var dest = 'dist';
 // less 和 sass 都在 dest + "/css" -- 没有写
 
 module.exports = {
+	version: '1.0.0',
 	src: src,
 	dest: dest,
 	less: {

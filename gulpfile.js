@@ -5,7 +5,8 @@ var SSI          = require('browsersync-ssi');
 var concat       = require('gulp-concat');
 // minify是最小化，uglify是丑化
 // 最小化，把你代码压成一行; 丑化，把你代码压成一行，并混淆丑化
-var minify       = require('gulp-minify');
+// var minify       = require('gulp-minify'); -- 弃用 uglify 有同样功能
+var uglify       = require('gulp-uglify');
 var cssmin       = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
 var fileinclude  = require('gulp-file-include');
@@ -24,7 +25,6 @@ var clean        = require('gulp-clean');
 var runSequence  = require('run-sequence');
 // 配置文件
 var config       = require('./config');
-console.log(config);
 
 gulp.task('serve', function() {
     // BrowserSync 监听 dist 目录
@@ -91,10 +91,20 @@ gulp.task('less', function() {
 
 // javscript files operate
 gulp.task('js', function(){
-    // minify() -- gulp-minify 压缩 js 代码
     return gulp.src(config.js.src)
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
-        .pipe(minify())
+        // .pipe(minify({ // 弃用
+        //     ext: {
+        //         // source: '-min.js',
+        //         // min: '-min.js'
+        //     },
+        //     ignoreFiles: ['-min.js']
+        // }))
+        .pipe(uglify({
+            mangle: false
+            // mangle: true,// 类型：Boolean 默认：true 是否修改变量名  
+            // mangle: {except:['require','exports','module','$']} // 排除混淆关键字 
+        })) // 压缩，丑化代码
         .pipe(gulp.dest(config.js.dest))
         .pipe(browserSync.stream());
 });
@@ -146,7 +156,7 @@ gulp.task('publish', function() {
 
     return gulp.src(config.dest+'/**/*')
         .pipe(plumber({errorHandler:notify.onError('Error:<%=error.message%>')}))
-        .pipe(zip('publish.zip'))
+        .pipe(zip('publish.'+config.version+'.zip'))
         .pipe(gulp.dest('release'))
 });
 
@@ -166,7 +176,7 @@ gulp.task('dev', function (done) {
     runSequence(
         ['clean'],
         ['html', 'js', 'sass', 'less'],
-        ['serve'],
+        // ['serve'],
         done);
 });
 
