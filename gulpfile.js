@@ -16,7 +16,7 @@ var revCollector = require('gulp-rev-collector');
 var plumber      = require('gulp-plumber');
 var notify       = require('gulp-notify');
 var sass         = require('gulp-sass');
-var less         = require('gulp-less');
+// var less         = require('gulp-less');
 var imagemin     = require('gulp-imagemin');
 var zip          = require('gulp-zip');
 var clean        = require('gulp-clean');
@@ -39,7 +39,7 @@ gulp.task('serve', function() {
     });
     // watch -- 将文件编译到 dist 目录下, 触发 BrowserSync
     gulp.watch(config.sass.all, ['sass']);
-    gulp.watch(config.less.all, ['less']);
+    // gulp.watch(config.less.all, ['less']);
     gulp.watch(config.js.src, ['js']);
     gulp.watch(config.html.src, ['html']);
     gulp.watch(config.img.src, ['optimizeImg']);
@@ -197,7 +197,7 @@ gulp.task('dev', function (done) {
     condition = false;
     runSequence(
         ['clean'],
-        ['optimizeImg', 'copy', 'html', 'js', 'sass', 'less'],
+        ['optimizeImg', 'copy', 'html', 'js', 'sass'],
         ['serve'],
         done);
 });
